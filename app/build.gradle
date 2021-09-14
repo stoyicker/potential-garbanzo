@@ -1,0 +1,42 @@
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath(libs.bundles.gradlePluginsAndroid)
+    classpath(libs.bundles.gradlePluginsKotlin)
+  }
+}
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+
+final def runningOnCi = System.getenv("CI") != null
+android {
+  compileSdkVersion 31
+  buildToolsVersion "31.0.0"
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  defaultConfig {
+    applicationId "org.interview.jorge"
+    minSdkVersion 16
+    targetSdkVersion 31
+    // Depending on the git method locally causes IDE issues
+    versionCode runningOnCi ? "git rev-list --count HEAD".execute().text.toInteger() : Integer.MAX_VALUE
+    versionName String.valueOf(versionCode)
+  }
+  variantFilter {
+    it.ignore = !it.buildType.isDebuggable()
+  }
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  implementation(libs.bundles.kotlin)
+}
