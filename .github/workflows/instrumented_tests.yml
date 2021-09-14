@@ -1,0 +1,61 @@
+name: Instrumented tests
+on: [ push, workflow_dispatch ]
+jobs:
+  assembleApks:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout (--depth=1)
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Assemble debug apk
+        run: ./gradlew app:assembleDebug
+      - name: Prepare debug APK for artifact upload
+        run: mv $(find -name "*.apk") app-debug.apk
+      - name: Upload debug APK as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug.apk
+          path: app-debug.apk
+      - name: Assemble debug test apk
+        run: ./gradlew app:assembleDebugAndroidTest
+      - name: Prepare debug test APK for artifact upload
+        run: mv $(find -name "*androidTest.apk") app-debug-tests.apk
+      - name: Upload debug test APK as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-debug-tests.apk
+          path: app-debug-tests.apk
+  instrumentedTests:
+    needs: [ assembleApks ]
+    runs-on: ubuntu-20.04
+    container: google/cloud-sdk:357.0.0
+    strategy:
+      matrix:
+        deviceModel: [ NexusLowRes, Pixel2 ]
+    steps:
+      - name: Checkout (--depth=1)
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Download debug APK
+        uses: actions/download-artifact@v2
+        with:
+          name: app-debug.apk
+      - name: Download debug test APK
+        uses: actions/download-artifact@v2
+        with:
+          name: app-debug-tests.apk
+      - name: Decrypt Firebase project service account key file
+        run: openssl aes-256-cbc -md sha512 -iter 100000 -d -in secrets/gcloudsdk-key.json.enc -out gcloudsdk-key.json -k ${{ secrets.ENCRYPTION_KEY }}
+      - name: Activate Firebase service account
+        run: gcloud auth activate-service-account --key-file gcloudsdk-key.json
+      - name: Activate Firebase project
+        run: gcloud config set project ivv-tidal
+      - name: Run instrumented tests
+        run: |
+          gcloud firebase test android run \
+          --app app-debug.apk \
+          --test app-debug-tests.apk \
+          --device model=${{ matrix.deviceModel }},version=30 \
+          --use-orchestrator \
+          --directories-to-pull /sdcard \
+          --environment-variables clearPackageData=true
