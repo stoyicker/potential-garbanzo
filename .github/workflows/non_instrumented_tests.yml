@@ -1,0 +1,16 @@
+name: Non-instrumented tests
+on: [ push, workflow_dispatch ]
+jobs:
+  nonInstrumentedTests:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout (--depth=1)
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Run non-instrumented tests for debug
+        run: ./gradlew app:testDebugUnitTest
+      - name: Upload test run results as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test results (debug)
+          path: app/build/reports/tests/**/*
