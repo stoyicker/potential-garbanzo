@@ -27,6 +27,17 @@ android {
   variantFilter {
     it.ignore = !it.buildType.isDebuggable()
   }
+  lintOptions {
+    quiet false
+    abortOnError true
+    warningsAsErrors true
+    noLines false
+    explainIssues true
+    xmlReport false
+    htmlReport true
+    checkTestSources true
+    checkDependencies false
+  }
 }
 
 repositories {
