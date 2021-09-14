@@ -26,6 +26,8 @@ android {
     // Depending on the git method locally causes IDE issues
     versionCode runningOnCi ? "git rev-list --count HEAD".execute().text.toInteger() : Integer.MAX_VALUE
     versionName String.valueOf(versionCode)
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunnerArguments clearPackageData: "true"
   }
   variantFilter {
     it.ignore = !it.buildType.isDebuggable()
@@ -54,4 +56,9 @@ dependencies {
   implementation(libs.bundles.kotlin)
 
   testImplementation(libs.bundles.junit)
+
+  androidTestImplementation(libs.bundles.espresso)
+  androidTestImplementation(libs.bundles.androidxTest)
+
+  androidTestUtil(libs.bundles.androidxTestOrchestrator)
 }
