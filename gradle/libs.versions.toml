@@ -1,13 +1,16 @@
 [versions]
 gradlePluginAndroid = { strictly = "7.0.2" }
+junit = { strictly = "4.13.2" }
 kotlin = { strictly = "1.5.30" }
 
 [libraries]
 gradlePluginAndroid = { module = "com.android.tools.build:gradle", version.ref = "gradlePluginAndroid" }
 gradlePluginKotlinAndroid = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+junit = { module = "junit:junit", version.ref = "junit"}
 kotlinStdLib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 
 [bundles]
 gradlePluginsAndroid = ["gradlePluginAndroid"]
 gradlePluginsKotlin = ["gradlePluginKotlinAndroid"]
+junit = ["junit"]
 kotlin = ["kotlinStdLib"]
