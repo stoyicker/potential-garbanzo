@@ -1,0 +1,3 @@
+rootProject.name = "Interview project"
+include ":app"
+enableFeaturePreview("VERSION_CATALOGS")

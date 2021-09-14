@@ -1,0 +1,39 @@
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath(libs.bundles.gradlePluginsAndroid)
+    classpath(libs.bundles.gradlePluginsKotlin)
+  }
+}
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+
+android {
+  compileSdkVersion 31
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  defaultConfig {
+    applicationId "org.interview.jorge"
+    minSdkVersion 16
+    targetSdkVersion 31
+    versionCode Integer.MAX_VALUE
+    versionName String.valueOf(versionCode)
+  }
+  variantFilter {
+    it.ignore = !it.buildType.isDebuggable()
+  }
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  implementation(libs.bundles.kotlin)
+}
