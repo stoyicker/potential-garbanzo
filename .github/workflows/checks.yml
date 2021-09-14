@@ -1,0 +1,16 @@
+name: Checks
+on: [ push, workflow_dispatch ]
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout (--depth=1)
+        id: checkout
+        uses: actions/checkout@v2
+      - name: Lint debug
+        run: ./gradlew app:lintDebug
+      - name: Upload lint report as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Lint report (debug)
+          path: app/build/reports/lint-results-*.html
