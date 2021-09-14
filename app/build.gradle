@@ -48,4 +48,6 @@ repositories {
 
 dependencies {
   implementation(libs.bundles.kotlin)
+
+  testImplementation(libs.bundles.junit)
 }
