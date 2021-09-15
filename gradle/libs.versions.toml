@@ -25,6 +25,7 @@ daggerCompiler = { module = "com.google.dagger:dagger-compiler", version.ref = "
 androidxMedia = { module = "androidx.media:media", version.ref = "androidxMedia" }
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 exoPlayerCore = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoPlayer" }
+exoPlayerUi = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoPlayer" }
 
 [bundles]
 gradlePluginsAndroid = ["gradlePluginAndroid"]
@@ -38,4 +39,4 @@ dagger = ["dagger"]
 daggerCompiler = ["daggerCompiler"]
 androidxMedia = ["androidxMedia"]
 mockitoKotlin = ["mockitoKotlin"]
-exoPlayer = ["exoPlayerCore"]
+exoPlayer = ["exoPlayerCore", "exoPlayerUi"]
