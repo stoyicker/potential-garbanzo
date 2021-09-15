@@ -10,6 +10,7 @@ buildscript {
 }
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "kotlin-kapt"
 
 android {
   compileSdkVersion 31
@@ -49,11 +50,16 @@ repositories {
 
 dependencies {
   implementation(libs.bundles.kotlin)
+  implementation(libs.bundles.dagger)
+
+  kapt(libs.bundles.daggerCompiler)
 
   testImplementation(libs.bundles.junit)
 
   androidTestImplementation(libs.bundles.espresso)
   androidTestImplementation(libs.bundles.androidxTest)
+
+  kaptAndroidTest(libs.bundles.daggerCompiler)
 
   androidTestUtil(libs.bundles.androidxTestOrchestrator)
 }
