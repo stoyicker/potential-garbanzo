@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playback_service_notification_channel_id" translatable="false">notification_channel_playback_service</string>
+</resources>
