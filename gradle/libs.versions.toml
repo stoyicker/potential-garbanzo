@@ -5,6 +5,7 @@ kotlin = { strictly = "1.5.30" }
 espresso = { strictly = "3.4.0" }
 androidxTest = { strictly = "1.4.0" }
 androidxTestExt = { strictly = "1.1.3" }
+dagger = { strictly = "2.38.1" }
 
 [libraries]
 gradlePluginAndroid = { module = "com.android.tools.build:gradle", version.ref = "gradlePluginAndroid" }
@@ -16,6 +17,8 @@ androidxInstrumentedTestRunner = { module = "androidx.test:runner", version.ref 
 androidxInstrumentedTestRules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
 androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTest" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+daggerCompiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 
 [bundles]
 gradlePluginsAndroid = ["gradlePluginAndroid"]
@@ -25,3 +28,5 @@ kotlin = ["kotlinStdLib"]
 espresso = ["espresso"]
 androidxTest = ["androidxInstrumentedTestRunner", "androidxInstrumentedTestRules", "androidxTestExtJunit"]
 androidxTestOrchestrator = ["androidxTestOrchestrator"]
+dagger = ["dagger"]
+daggerCompiler = ["daggerCompiler"]
