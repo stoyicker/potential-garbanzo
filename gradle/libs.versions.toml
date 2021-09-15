@@ -7,6 +7,7 @@ androidxTest = { strictly = "1.4.0" }
 androidxTestExt = { strictly = "1.1.3" }
 dagger = { strictly = "2.38.1" }
 androidxMedia = { strictly = "1.4.1" }
+mockitoKotlin = { strictly = "3.2.0" }
 
 [libraries]
 gradlePluginAndroid = { module = "com.android.tools.build:gradle", version.ref = "gradlePluginAndroid" }
@@ -21,6 +22,7 @@ androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref 
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 daggerCompiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 androidxMedia = { module = "androidx.media:media", version.ref = "androidxMedia" }
+mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 
 [bundles]
 gradlePluginsAndroid = ["gradlePluginAndroid"]
@@ -33,3 +35,4 @@ androidxTestOrchestrator = ["androidxTestOrchestrator"]
 dagger = ["dagger"]
 daggerCompiler = ["daggerCompiler"]
 androidxMedia = ["androidxMedia"]
+mockitoKotlin = ["mockitoKotlin"]

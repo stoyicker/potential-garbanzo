@@ -56,6 +56,7 @@ dependencies {
   kapt(libs.bundles.daggerCompiler)
 
   testImplementation(libs.bundles.junit)
+  testImplementation(libs.bundles.mockitoKotlin)
 
   androidTestImplementation(libs.bundles.espresso)
   androidTestImplementation(libs.bundles.androidxTest)
