@@ -10,6 +10,8 @@ import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.Binds
@@ -39,13 +41,20 @@ internal abstract class PlaybackServiceModule {
     fun extractorsFactory(): ExtractorsFactory = ExtractorsFactory.EMPTY
 
     @Provides
+    @Reusable
+    @Local
+    fun trackSelector(@Local context: Context): TrackSelector = DefaultTrackSelector(context)
+
+    @Provides
     @PlaybackServiceComponent.Scoped
     fun player(
       @Local context: Context,
       @Local renderersFactory: RenderersFactory,
-      @Local extractorsFactory: ExtractorsFactory
+      @Local extractorsFactory: ExtractorsFactory,
+      @Local trackSelector: TrackSelector
     ): Player = SimpleExoPlayer.Builder(context, renderersFactory, extractorsFactory)
       .setLooper(Looper.getMainLooper())
+      .setTrackSelector(trackSelector)
       .setWakeMode(WAKE_MODE_NETWORK)
       .build()
 
