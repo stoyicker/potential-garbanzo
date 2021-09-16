@@ -8,6 +8,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.Binds
 import dagger.Module
@@ -31,12 +32,20 @@ internal abstract class PlaybackServiceModule {
       MediaCodecAudioRenderersFactory(context)
 
     @Provides
+    @Reusable
+    @Local
+    fun extractorsFactory(): ExtractorsFactory = ExtractorsFactory.EMPTY
+
+    @Provides
     @PlaybackServiceComponent.Scoped
-    fun player(@Local context: Context, @Local renderersFactory: RenderersFactory): Player =
-      SimpleExoPlayer.Builder(context, renderersFactory)
-        .setLooper(Looper.getMainLooper())
-        .setWakeMode(WAKE_MODE_NETWORK)
-        .build()
+    fun player(
+      @Local context: Context,
+      @Local renderersFactory: RenderersFactory,
+      @Local extractorsFactory: ExtractorsFactory
+    ): Player = SimpleExoPlayer.Builder(context, renderersFactory, extractorsFactory)
+      .setLooper(Looper.getMainLooper())
+      .setWakeMode(WAKE_MODE_NETWORK)
+      .build()
 
     @Provides
     @Reusable
