@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.ExoPlayer
@@ -101,6 +102,7 @@ internal abstract class PlaybackServiceModule {
         setUseNextAction(true)
         setUseRewindAction(false)
         setUseFastForwardAction(false)
+        setPriority(NotificationCompat.PRIORITY_MAX)
       }
 
     @Provides
