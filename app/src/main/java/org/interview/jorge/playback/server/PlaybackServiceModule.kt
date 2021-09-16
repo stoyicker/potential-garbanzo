@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Looper
 import com.google.android.exoplayer2.Player
 import androidx.core.app.NotificationManagerCompat
+import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import dagger.Binds
@@ -12,7 +13,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
-import java.util.concurrent.Executors
 import javax.inject.Qualifier
 
 @Module
@@ -27,6 +27,7 @@ internal abstract class PlaybackServiceModule {
     @PlaybackServiceComponent.Scoped
     fun player(@Local context: Context): Player = SimpleExoPlayer.Builder(context)
       .setLooper(Looper.getMainLooper())
+      .setWakeMode(WAKE_MODE_NETWORK)
       .build()
 
     @Provides
