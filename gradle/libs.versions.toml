@@ -25,6 +25,7 @@ androidxMedia = { module = "androidx.media:media", version.ref = "androidxMedia"
 mockitoKotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 exoPlayerCore = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoPlayer" }
 exoPlayerUi = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoPlayer" }
+exoPlayerHls = { module = "com.google.android.exoplayer:exoplayer-hls", version.ref = "exoPlayer" }
 mockitoAndroid = { module = "org.mockito:mockito-android", version.ref = "mockitoKotlin" }
 
 [bundles]
@@ -38,5 +39,5 @@ dagger = ["dagger"]
 daggerCompiler = ["daggerCompiler"]
 androidxMedia = ["androidxMedia"]
 mockitoKotlin = ["mockitoKotlin"]
-exoPlayer = ["exoPlayerCore", "exoPlayerUi"]
+exoPlayer = ["exoPlayerCore", "exoPlayerUi", "exoPlayerHls"]
 mockito = ["mockitoAndroid"]
