@@ -37,7 +37,9 @@ internal class PlaybackService
       it.addListener(this)
       playerNotificationManager.setPlayer(it)
       testTrackMetadataRetriever.mediaItemRequestCallback = this
-      mediaItemRetrievalFuture = testTrackMetadataRetriever.retrieveMediaItem(TestTrack.TRACK_0)
+      TestTrack.values().forEach { track ->
+        mediaItemRetrievalFuture = testTrackMetadataRetriever.retrieveMediaItem(track)
+      }
       it.prepare()
     }
   }
