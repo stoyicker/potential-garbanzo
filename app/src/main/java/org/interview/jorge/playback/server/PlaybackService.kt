@@ -110,7 +110,7 @@ internal class PlaybackService
         NotificationChannel(
           getString(R.string.playback_service_notification_channel_id),
           getString(R.string.playback_service_notification_channel_name),
-          NotificationManager.IMPORTANCE_DEFAULT
+          NotificationManager.IMPORTANCE_HIGH
         )
       )
   }
