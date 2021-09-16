@@ -93,8 +93,8 @@ internal abstract class PlaybackServiceModule {
       .setChannelNameResourceId(R.string.playback_service_notification_channel_name)
       .setChannelImportance(NotificationUtil.IMPORTANCE_HIGH)
       .build().apply {
-        setUsePreviousAction(false)
-        setUseNextAction(false)
+        setUsePreviousAction(true)
+        setUseNextAction(true)
         setUseRewindAction(false)
         setUseFastForwardAction(false)
         setPriority(NotificationCompat.PRIORITY_MAX)
