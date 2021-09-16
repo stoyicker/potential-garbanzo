@@ -89,8 +89,8 @@ internal abstract class PlaybackServiceModule {
       context.getString(R.string.playback_service_notification_channel_id)
     ).setNotificationListener(notificationListener)
       .build().apply {
-        setUsePreviousAction(false)
-        setUseNextAction(false)
+        setUsePreviousAction(true)
+        setUseNextAction(true)
         setUseRewindAction(false)
         setUseFastForwardAction(false)
       }
