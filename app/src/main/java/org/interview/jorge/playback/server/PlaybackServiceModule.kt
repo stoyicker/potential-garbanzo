@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.util.NotificationUtil
@@ -28,6 +29,7 @@ internal abstract class PlaybackServiceModule {
     @PlaybackServiceComponent.Scoped
     fun player(@Local context: Context): Player = SimpleExoPlayer.Builder(context)
       .setLooper(Looper.getMainLooper())
+      .setWakeMode(WAKE_MODE_NETWORK)
       .build()
 
     @Provides
