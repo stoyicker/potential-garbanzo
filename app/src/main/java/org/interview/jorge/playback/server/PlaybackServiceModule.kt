@@ -81,10 +81,17 @@ internal abstract class PlaybackServiceModule {
       PlaybackServiceNotificationListener(service)
 
     @Provides
+    @Reusable
+    @Local
+    fun customActionReceiver(): PlayerNotificationManager.CustomActionReceiver =
+      PlaybackServiceCustomActionReceiver()
+
+    @Provides
     @PlaybackServiceComponent.Scoped
     fun playerNotificationManager(
       @Local context: Context,
-      @Local notificationListener: PlayerNotificationManager.NotificationListener
+      @Local notificationListener: PlayerNotificationManager.NotificationListener,
+      @Local customActionReceiver: PlayerNotificationManager.CustomActionReceiver
     ) = PlayerNotificationManager.Builder(
       context,
       PLAYBACK_SERVICE_FOREGROUND_NOTIFICATION_ID,
@@ -92,6 +99,7 @@ internal abstract class PlaybackServiceModule {
     ).setNotificationListener(notificationListener)
       .setChannelNameResourceId(R.string.playback_service_notification_channel_name)
       .setChannelImportance(NotificationUtil.IMPORTANCE_HIGH)
+      .setCustomActionReceiver(customActionReceiver)
       .build().apply {
         setUsePreviousAction(true)
         setUseNextAction(true)
