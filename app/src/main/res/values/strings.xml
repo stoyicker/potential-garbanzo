@@ -2,4 +2,5 @@
 <resources>
     <string name="playback_service_notification_channel_name">Playback</string>
     <string name="app_label">Jorge\'s interview</string>
+    <string name="playback_service_custom_command_title_shuffle">Shuffle</string>
 </resources>
