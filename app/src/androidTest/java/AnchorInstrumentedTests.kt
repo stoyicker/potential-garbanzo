@@ -15,11 +15,6 @@ internal class AnchorInstrumentedTests {
   val activityScenarioRule = ActivityScenarioRule(DefaultActivity::class.java)
 
   @Test
-  fun testExistingView() {
-    onView(withId(android.R.id.content)).check(matches(isCompletelyDisplayed()))
-  }
-
-  @Test
   fun testNonExistentView() {
     onView(withText("I should not exist")).check(doesNotExist())
   }
