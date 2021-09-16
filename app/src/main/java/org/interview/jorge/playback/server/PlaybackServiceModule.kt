@@ -2,21 +2,27 @@ package org.interview.jorge.playback.server
 
 import android.app.Service
 import android.content.Context
+import android.os.Handler
 import android.os.Looper
-import com.google.android.exoplayer2.Player
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.source.MediaSourceFactory
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
+import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
+import java.util.concurrent.Executors
 import javax.inject.Qualifier
 
 @Module
@@ -27,6 +33,11 @@ internal abstract class PlaybackServiceModule {
   abstract fun context(service: Service): Context
 
   companion object {
+    @Provides
+    @Reusable
+    @Local
+    fun mainLooper(): Looper = Looper.getMainLooper()
+
     @Provides
     @Reusable
     @Local
@@ -47,11 +58,12 @@ internal abstract class PlaybackServiceModule {
     @PlaybackServiceComponent.Scoped
     fun player(
       @Local context: Context,
+      @Local mainLooper: Looper,
       @Local renderersFactory: RenderersFactory,
       @Local extractorsFactory: ExtractorsFactory,
       @Local trackSelector: TrackSelector
-    ): Player = SimpleExoPlayer.Builder(context, renderersFactory, extractorsFactory)
-      .setLooper(Looper.getMainLooper())
+    ): ExoPlayer = SimpleExoPlayer.Builder(context, renderersFactory, extractorsFactory)
+      .setLooper(mainLooper)
       .setTrackSelector(trackSelector)
       .setWakeMode(WAKE_MODE_NETWORK)
       .build()
@@ -82,6 +94,21 @@ internal abstract class PlaybackServiceModule {
         setUseRewindAction(false)
         setUseFastForwardAction(false)
       }
+
+    @Provides
+    @PlaybackServiceComponent.Scoped
+    fun testTrackMediaItemRetriever() = TestTrackMediaItemRetriever(
+      Executors.newSingleThreadExecutor()
+    )
+
+    @Provides
+    @Reusable
+    fun mainLooperHandler(@Local mainLooper: Looper) = Handler(mainLooper)
+
+    @Provides
+    @Reusable
+    fun mediaSourceFactory(): MediaSourceFactory =
+      HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
   }
 
   @Retention(AnnotationRetention.RUNTIME)
