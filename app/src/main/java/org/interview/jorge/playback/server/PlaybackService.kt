@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -87,6 +88,18 @@ internal class PlaybackService
   override fun onIsPlayingChanged(isPlaying: Boolean) {
     if (!isPlaying && player?.playbackState == Player.STATE_ENDED) {
       stopSelf()
+    }
+  }
+
+  override fun onPlayerError(error: PlaybackException) {
+    player?.apply {
+      if (hasNextWindow()) {
+        seekToNextWindow()
+        prepare()
+        play()
+      } else {
+        stopSelf()
+      }
     }
   }
 
