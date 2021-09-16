@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.interview.jorge.R
@@ -20,7 +21,8 @@ import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
 import java.util.concurrent.Future
 import javax.inject.Inject
 
-internal class PlaybackService : Service(), TestTrackMediaItemRetriever.MediaItemRequestCallback {
+internal class PlaybackService
+  : Service(), TestTrackMediaItemRetriever.MediaItemRequestCallback, Player.Listener {
   @Inject
   @JvmField
   var player: ExoPlayer? = null
@@ -48,6 +50,7 @@ internal class PlaybackService : Service(), TestTrackMediaItemRetriever.MediaIte
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         createNotificationChannel()
       }
+      it.addListener(this)
       playerNotificationManager.setPlayer(it)
       testTrackMetadataRetriever.mediaItemRequestCallback = this
       mediaItemRetrievalFuture = testTrackMetadataRetriever.retrieveMediaItem(TestTrack.TRACK_0)
@@ -60,6 +63,7 @@ internal class PlaybackService : Service(), TestTrackMediaItemRetriever.MediaIte
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
   override fun onDestroy() {
+    player?.removeListener(this)
     mediaItemRetrievalFuture?.cancel(true)
     testTrackMetadataRetriever.mediaItemRequestCallback = null
     playerNotificationManager.setPlayer(null)
@@ -76,6 +80,12 @@ internal class PlaybackService : Service(), TestTrackMediaItemRetriever.MediaIte
 
   override fun onMediaItemRetrievalError(testTrack: TestTrack, cause: Throwable) {
     Log.e(javaClass.name, "MediaItem retrieval error for track ${testTrack.name}", cause)
+  }
+
+  override fun onIsPlayingChanged(isPlaying: Boolean) {
+    if (!isPlaying && player?.playbackState == Player.STATE_ENDED) {
+      stopSelf()
+    }
   }
 
   @RequiresApi(Build.VERSION_CODES.O)
