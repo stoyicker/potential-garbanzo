@@ -12,13 +12,13 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.Cache
-import org.interview.jorge.playback.datasource.DefaultTestTrackMediaItemRetriever
 import org.interview.jorge.playback.datasource.TestTrack
+import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
 import java.util.concurrent.Future
 import javax.inject.Inject
 
 internal class PlaybackService
-  : Service(), DefaultTestTrackMediaItemRetriever.MediaItemRequestCallback, Player.Listener {
+  : Service(), TestTrackMediaItemRetriever.MediaItemRequestCallback, Player.Listener {
   @Inject
   @JvmField
   var player: ExoPlayer? = null
@@ -27,7 +27,7 @@ internal class PlaybackService
   lateinit var playerNotificationManager: PlayerNotificationManager
 
   @Inject
-  lateinit var testTrackMetadataRetriever: DefaultTestTrackMediaItemRetriever
+  lateinit var testTrackMediaItemRetriever: TestTrackMediaItemRetriever
 
   @Inject
   lateinit var mainLooperHandler: Handler
@@ -45,9 +45,9 @@ internal class PlaybackService
     player?.let {
       it.addListener(this)
       playerNotificationManager.setPlayer(it)
-      testTrackMetadataRetriever.mediaItemRequestCallback = this
+      testTrackMediaItemRetriever.mediaItemRequestCallback = this
       TestTrack.values().forEach { track ->
-        mediaItemRetrievalFuture = testTrackMetadataRetriever.retrieveMediaItem(track)
+        mediaItemRetrievalFuture = testTrackMediaItemRetriever.retrieveMediaItem(track)
       }
       it.prepare()
     }
@@ -61,7 +61,7 @@ internal class PlaybackService
     cache.release()
     player?.removeListener(this)
     mediaItemRetrievalFuture?.cancel(true)
-    testTrackMetadataRetriever.mediaItemRequestCallback = null
+    testTrackMediaItemRetriever.mediaItemRequestCallback = null
     playerNotificationManager.setPlayer(null)
     player?.release()
     player = null

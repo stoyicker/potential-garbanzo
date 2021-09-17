@@ -34,6 +34,7 @@ import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
 import org.interview.jorge.playback.datasource.DefaultTestTrackMediaItemRetriever
+import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -123,8 +124,10 @@ internal abstract class PlaybackServiceModule {
 
     @Provides
     @PlaybackServiceComponent.Scoped
-    fun testTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
-      DefaultTestTrackMediaItemRetriever(singleThreadExecutorService)
+    fun testTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService)
+    : TestTrackMediaItemRetriever = DefaultTestTrackMediaItemRetriever(
+      singleThreadExecutorService
+    )
 
     @Provides
     @Reusable

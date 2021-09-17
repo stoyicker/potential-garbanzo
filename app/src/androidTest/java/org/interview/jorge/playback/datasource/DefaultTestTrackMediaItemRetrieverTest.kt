@@ -20,7 +20,7 @@ internal class DefaultTestTrackMediaItemRetrieverTest {
     // check before actually running the test for a better shot at a relevant result, and skip the
     // test if the assumption is not met
     assumeTrue(getResponseCodeForTestTrack0() == 200)
-    val callback = mock(DefaultTestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
+    val callback = mock(TestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
     subject.mediaItemRequestCallback = callback
 
     subject.retrieveMediaItem(TestTrack.TRACK_0).get()
