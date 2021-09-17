@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.RenderersFactory
@@ -73,10 +72,6 @@ internal abstract class PlaybackServiceModule {
       .setTrackSelector(trackSelector)
       .setWakeMode(WAKE_MODE_NETWORK)
       .build()
-
-    @Provides
-    @Reusable
-    fun notificationManagerCompat(@Local context: Context) = NotificationManagerCompat.from(context)
 
     @Provides
     @Reusable
