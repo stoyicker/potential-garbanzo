@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
 import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.Binds
 import dagger.Module
@@ -122,6 +123,7 @@ internal abstract class PlaybackServiceModule {
     @Reusable
     fun mediaSourceFactory(): MediaSourceFactory =
       HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
+        .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(0))
   }
 
   @Retention(AnnotationRetention.RUNTIME)
