@@ -21,7 +21,7 @@ import java.util.concurrent.Future
  * this way we support the scenario where the [Runnable] is not started if [Future.cancel] is called
  * early enough.
  */
-internal class TestTrackMediaItemRetriever(private val executorService: ExecutorService) {
+internal class DefaultTestTrackMediaItemRetriever(private val executorService: ExecutorService) {
   var mediaItemRequestCallback: MediaItemRequestCallback? = null
 
   fun retrieveMediaItem(testTrack: TestTrack): Future<*> =

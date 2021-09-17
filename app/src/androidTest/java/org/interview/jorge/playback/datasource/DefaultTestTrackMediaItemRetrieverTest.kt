@@ -11,8 +11,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
 
-internal class TestTrackMediaItemRetrieverTest {
-  private val subject = TestTrackMediaItemRetriever(Executors.newSingleThreadExecutor())
+internal class DefaultTestTrackMediaItemRetrieverTest {
+  private val subject = DefaultTestTrackMediaItemRetriever(Executors.newSingleThreadExecutor())
 
   @Test
   fun retrieveRealMediaItem() {
@@ -20,7 +20,7 @@ internal class TestTrackMediaItemRetrieverTest {
     // check before actually running the test for a better shot at a relevant result, and skip the
     // test if the assumption is not met
     assumeTrue(getResponseCodeForTestTrack0() == 200)
-    val callback = mock(TestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
+    val callback = mock(DefaultTestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
     subject.mediaItemRequestCallback = callback
 
     subject.retrieveMediaItem(TestTrack.TRACK_0).get()
