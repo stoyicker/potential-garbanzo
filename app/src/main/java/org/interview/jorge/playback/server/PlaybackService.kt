@@ -30,6 +30,10 @@ internal class PlaybackService
   lateinit var testTrackMediaItemRetriever: TestTrackMediaItemRetriever
 
   @Inject
+  @PlaybackServiceModule.Hardcoded
+  lateinit var hardcodedTestTrackMediaItemRetriever: TestTrackMediaItemRetriever
+
+  @Inject
   lateinit var mainLooperHandler: Handler
 
   @Inject
@@ -46,6 +50,7 @@ internal class PlaybackService
       it.addListener(this)
       playerNotificationManager.setPlayer(it)
       testTrackMediaItemRetriever.mediaItemRequestCallback = this
+      hardcodedTestTrackMediaItemRetriever.mediaItemRequestCallback = this
       TestTrack.values().forEach { track ->
         mediaItemRetrievalFuture = testTrackMediaItemRetriever.retrieveMediaItem(track)
       }
@@ -62,6 +67,7 @@ internal class PlaybackService
     player?.removeListener(this)
     mediaItemRetrievalFuture?.cancel(true)
     testTrackMediaItemRetriever.mediaItemRequestCallback = null
+    hardcodedTestTrackMediaItemRetriever.mediaItemRequestCallback = null
     playerNotificationManager.setPlayer(null)
     player?.release()
     player = null

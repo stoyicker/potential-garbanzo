@@ -8,7 +8,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
 internal class PlaybackServiceCustomActionReceiverTest {
-  private val subject = PlaybackServiceCustomActionReceiver()
+  private val subject = PlaybackServiceCustomActionReceiver(mock())
 
   @Test
   fun onCustomActionShuffleShuffleModeDisabled() {

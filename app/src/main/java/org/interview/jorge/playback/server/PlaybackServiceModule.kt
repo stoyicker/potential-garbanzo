@@ -34,6 +34,7 @@ import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
 import org.interview.jorge.playback.datasource.DefaultTestTrackMediaItemRetriever
+import org.interview.jorge.playback.datasource.HardcodedTestTrackMediaItemRetriever
 import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -90,10 +91,19 @@ internal abstract class PlaybackServiceModule {
       PlaybackServiceNotificationListener(service)
 
     @Provides
-    @Reusable
+    @PlaybackServiceComponent.Scoped
+    @Hardcoded
+    fun hardcodedTestTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService)
+        : TestTrackMediaItemRetriever =
+      HardcodedTestTrackMediaItemRetriever(singleThreadExecutorService)
+
+    @Provides
+    @PlaybackServiceComponent.Scoped
     @Local
-    fun customActionReceiver(): PlayerNotificationManager.CustomActionReceiver =
-      PlaybackServiceCustomActionReceiver()
+    fun customActionReceiver(
+      @Hardcoded testTrackMediaItemRetriever: TestTrackMediaItemRetriever
+    ): PlayerNotificationManager.CustomActionReceiver =
+      PlaybackServiceCustomActionReceiver(testTrackMediaItemRetriever)
 
     @Provides
     @PlaybackServiceComponent.Scoped
@@ -191,6 +201,10 @@ internal abstract class PlaybackServiceModule {
   @Retention(AnnotationRetention.RUNTIME)
   @Qualifier
   private annotation class Upstream
+
+  @Retention(AnnotationRetention.RUNTIME)
+  @Qualifier
+  annotation class Hardcoded
 
   @Retention(AnnotationRetention.RUNTIME)
   @Qualifier

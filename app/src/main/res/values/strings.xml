@@ -3,4 +3,5 @@
     <string name="playback_service_notification_channel_name">Playback</string>
     <string name="app_label">Jorge\'s interview</string>
     <string name="playback_service_custom_command_title_shuffle">Shuffle</string>
+    <string name="playback_service_custom_command_title_add_hardcoded_media_items">Add hardcoded media items</string>
 </resources>
