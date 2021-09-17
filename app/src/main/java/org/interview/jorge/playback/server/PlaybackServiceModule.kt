@@ -16,8 +16,10 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
+import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy
 import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.Binds
 import dagger.Module
@@ -25,6 +27,7 @@ import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
 import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Qualifier
 
@@ -110,10 +113,14 @@ internal abstract class PlaybackServiceModule {
       }
 
     @Provides
+    @Reusable
+    @Local
+    fun singleThreadExecutorService(): ExecutorService = Executors.newSingleThreadExecutor()
+
+    @Provides
     @PlaybackServiceComponent.Scoped
-    fun testTrackMediaItemRetriever() = TestTrackMediaItemRetriever(
-      Executors.newSingleThreadExecutor()
-    )
+    fun testTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
+      TestTrackMediaItemRetriever(singleThreadExecutorService)
 
     @Provides
     @Reusable
@@ -121,9 +128,21 @@ internal abstract class PlaybackServiceModule {
 
     @Provides
     @Reusable
-    fun mediaSourceFactory(): MediaSourceFactory =
-      HlsMediaSource.Factory(DefaultHttpDataSource.Factory())
-        .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(0))
+    @Local
+    fun dataSourceFactory(): DataSource.Factory = DefaultHttpDataSource.Factory()
+
+    @Provides
+    @Reusable
+    @Local
+    fun loadErrorHandlingPolicy(): LoadErrorHandlingPolicy = DefaultLoadErrorHandlingPolicy(0)
+
+    @Provides
+    @Reusable
+    fun mediaSourceFactory(
+      @Local dataSourceFactory: DataSource.Factory,
+      @Local loadErrorHandlingPolicy: LoadErrorHandlingPolicy): MediaSourceFactory =
+      HlsMediaSource.Factory(dataSourceFactory)
+        .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
   }
 
   @Retention(AnnotationRetention.RUNTIME)
