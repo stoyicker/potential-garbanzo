@@ -48,9 +48,11 @@ internal class DefaultActivityTest {
       it.method.name.contentEquals("invoke")
     }
     assertTrue(invocation.arguments[0] != null)
-    assertTrue((invocation.arguments[1] as Intent).component!!.className.contentEquals(
-      PlaybackService::class.java.name
-    ))
+    assertTrue(
+      (invocation.arguments[1] as Intent).component!!.className.contentEquals(
+        PlaybackService::class.java.name
+      )
+    )
   }
 
   @Component

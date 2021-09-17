@@ -140,9 +140,9 @@ internal abstract class PlaybackServiceModule {
     @Reusable
     fun mediaSourceFactory(
       @Local dataSourceFactory: DataSource.Factory,
-      @Local loadErrorHandlingPolicy: LoadErrorHandlingPolicy): MediaSourceFactory =
-      HlsMediaSource.Factory(dataSourceFactory)
-        .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
+      @Local loadErrorHandlingPolicy: LoadErrorHandlingPolicy
+    ): MediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
+      .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
   }
 
   @Retention(AnnotationRetention.RUNTIME)

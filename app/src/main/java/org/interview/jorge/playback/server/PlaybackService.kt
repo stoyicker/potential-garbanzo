@@ -21,12 +21,16 @@ internal class PlaybackService
   @Inject
   @JvmField
   var player: ExoPlayer? = null
+
   @Inject
   lateinit var playerNotificationManager: PlayerNotificationManager
+
   @Inject
   lateinit var testTrackMetadataRetriever: TestTrackMediaItemRetriever
+
   @Inject
   lateinit var mainLooperHandler: Handler
+
   @Inject
   lateinit var mediaSourceFactory: MediaSourceFactory
   private var mediaItemRetrievalFuture: Future<*>? = null

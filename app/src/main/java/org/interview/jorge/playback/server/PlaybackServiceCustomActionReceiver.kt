@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.ExoPlayer

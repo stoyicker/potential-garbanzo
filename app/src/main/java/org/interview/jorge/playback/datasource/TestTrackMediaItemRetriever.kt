@@ -24,37 +24,39 @@ import java.util.concurrent.Future
 internal class TestTrackMediaItemRetriever(private val executorService: ExecutorService) {
   var mediaItemRequestCallback: MediaItemRequestCallback? = null
 
-  fun retrieveMediaItem(testTrack: TestTrack): Future<*> = executorService.submit(object : Runnable {
-    override fun run() {
-      try {
-        if (Thread.interrupted()) {
-          return
-        }
-        val urlConnection = URL(testTrack.metadataDocumentUrl).openConnection() as HttpURLConnection
+  fun retrieveMediaItem(testTrack: TestTrack): Future<*> =
+    executorService.submit(object : Runnable {
+      override fun run() {
         try {
           if (Thread.interrupted()) {
             return
           }
-          val metadata = BufferedReader(urlConnection.inputStream.reader()).use { it.readText() }
-          val jsonObject = JSONObject(metadata)
-          val mediaItem = MediaItem.Builder()
-            .setTag(jsonObject.getString(METADATA_DOCUMENT_KEY_ID))
-            .setUri(Uri.parse(jsonObject.getString(METADATA_DOCUMENT_KEY_MEDIA_URI)))
-            .setMediaMetadata(
-              MediaMetadata.Builder()
-                .setTitle(jsonObject.getString(METADATA_DOCUMENT_KEY_TITLE))
-                .build()
-            )
-            .build()
-          mediaItemRequestCallback?.onMediaItemRetrieved(mediaItem)
-        } finally {
-          urlConnection.disconnect()
+          val urlConnection =
+            URL(testTrack.metadataDocumentUrl).openConnection() as HttpURLConnection
+          try {
+            if (Thread.interrupted()) {
+              return
+            }
+            val metadata = BufferedReader(urlConnection.inputStream.reader()).use { it.readText() }
+            val jsonObject = JSONObject(metadata)
+            val mediaItem = MediaItem.Builder()
+              .setTag(jsonObject.getString(METADATA_DOCUMENT_KEY_ID))
+              .setUri(Uri.parse(jsonObject.getString(METADATA_DOCUMENT_KEY_MEDIA_URI)))
+              .setMediaMetadata(
+                MediaMetadata.Builder()
+                  .setTitle(jsonObject.getString(METADATA_DOCUMENT_KEY_TITLE))
+                  .build()
+              )
+              .build()
+            mediaItemRequestCallback?.onMediaItemRetrieved(mediaItem)
+          } finally {
+            urlConnection.disconnect()
+          }
+        } catch (throwable: Throwable) {
+          mediaItemRequestCallback?.onMediaItemRetrievalError(testTrack, throwable)
         }
-      } catch (throwable: Throwable) {
-        mediaItemRequestCallback?.onMediaItemRetrievalError(testTrack, throwable)
       }
-    }
-  })
+    })
 
   interface MediaItemRequestCallback {
     fun onMediaItemRetrieved(mediaItem: MediaItem)
