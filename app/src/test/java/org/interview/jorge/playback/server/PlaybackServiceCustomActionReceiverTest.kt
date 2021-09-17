@@ -1,6 +1,7 @@
 package org.interview.jorge.playback.server
 
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.source.ShuffleOrder
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
@@ -21,6 +22,6 @@ internal class PlaybackServiceCustomActionReceiverTest {
     )
 
     verify(player).shuffleModeEnabled = true
-    verify(player).setShuffleOrder(any())
+    verify(player).setShuffleOrder(any<ShuffleOrder.DefaultShuffleOrder>())
   }
 }
