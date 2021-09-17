@@ -11,6 +11,7 @@ import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.cache.Cache
 import org.interview.jorge.playback.datasource.TestTrack
 import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
 import java.util.concurrent.Future
@@ -33,6 +34,9 @@ internal class PlaybackService
 
   @Inject
   lateinit var mediaSourceFactory: MediaSourceFactory
+
+  @Inject
+  lateinit var cache: Cache
   private var mediaItemRetrievalFuture: Future<*>? = null
 
   override fun onCreate() {
@@ -54,6 +58,7 @@ internal class PlaybackService
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int) = START_STICKY
 
   override fun onDestroy() {
+    cache.release()
     player?.removeListener(this)
     mediaItemRetrievalFuture?.cancel(true)
     testTrackMetadataRetriever.mediaItemRequestCallback = null
