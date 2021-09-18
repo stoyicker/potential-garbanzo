@@ -49,7 +49,7 @@ internal class PlaybackServiceCustomActionReceiver(
 
   override fun getCustomActions(player: Player): List<String> {
     val mutableList = mutableListOf<String>()
-    if (player is ExoPlayer) {
+    if (player is ExoPlayer && player.mediaItemCount > 1) {
       mutableList.add(CUSTOM_ACTION_SHUFFLE)
     }
     if (!hasRequestedHardcodedMediaItems && player.mediaItemCount == 0) {
