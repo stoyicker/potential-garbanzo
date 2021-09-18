@@ -18,7 +18,7 @@ internal class HardcodedTestTrackMediaItemRetriever(executorService: ExecutorSer
   override fun createRetrievalRunnable(testTrack: TestTrack) = Runnable {
     try {
       mediaItemRequestCallback?.onMediaItemRetrieved(
-        HardcodedTestTrack.values()[TestTrack.values().indexOf(testTrack)].asMediaItem()
+        testTrack, HardcodedTestTrack.values()[TestTrack.values().indexOf(testTrack)].asMediaItem()
       )
     } catch (throwable: Throwable) {
       mediaItemRequestCallback?.onMediaItemRetrievalError(testTrack, throwable)

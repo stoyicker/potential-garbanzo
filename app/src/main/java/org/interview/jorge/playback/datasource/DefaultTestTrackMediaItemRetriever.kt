@@ -46,7 +46,7 @@ internal class DefaultTestTrackMediaItemRetriever(executorService: ExecutorServi
                 .build()
             )
             .build()
-          mediaItemRequestCallback?.onMediaItemRetrieved(mediaItem)
+          mediaItemRequestCallback?.onMediaItemRetrieved(testTrack, mediaItem)
         } finally {
           urlConnection.disconnect()
         }

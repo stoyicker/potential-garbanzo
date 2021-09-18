@@ -3,6 +3,7 @@ package org.interview.jorge.playback.datasource
 import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
 import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.mockito.Mockito
@@ -22,14 +23,17 @@ internal class DefaultTestTrackMediaItemRetrieverTest {
     assumeTrue(getResponseCodeForTestTrack0() == 200)
     val callback = mock(TestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
     subject.mediaItemRequestCallback = callback
+    val testTrack = TestTrack.TRACK_0
 
-    subject.retrieveMediaItem(TestTrack.TRACK_0).get()
+    subject.retrieveMediaItem(testTrack).get()
 
     // https://stackoverflow.com/questions/52389727/mockitos-argthat-returning-null-when-in-kotlin
     // Prettier resolution possible (e.g. with other libraries), but not the focus
-    val mediaItem = Mockito.mockingDetails(callback).invocations.single {
+    val arguments = Mockito.mockingDetails(callback).invocations.single {
       it.method.name.contentEquals("onMediaItemRetrieved")
-    }.arguments.single() as MediaItem
+    }.arguments
+    assertSame(testTrack, arguments[0])
+    val mediaItem = arguments[1] as MediaItem
     assertEquals("5463901a", mediaItem.playbackProperties!!.tag)
     assertEquals("The greatest song", mediaItem.mediaMetadata.title)
     assertEquals(

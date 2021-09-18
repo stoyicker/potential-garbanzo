@@ -13,7 +13,7 @@ internal abstract class TestTrackMediaItemRetriever(private val executorService:
   protected abstract fun createRetrievalRunnable(testTrack: TestTrack): Runnable
 
   interface MediaItemRequestCallback {
-    fun onMediaItemRetrieved(mediaItem: MediaItem)
+    fun onMediaItemRetrieved(testTrack: TestTrack, mediaItem: MediaItem)
 
     fun onMediaItemRetrievalError(testTrack: TestTrack, cause: Throwable)
   }

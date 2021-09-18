@@ -41,7 +41,7 @@ internal class PlaybackService
 
   @Inject
   lateinit var cache: Cache
-  private var mediaItemRetrievalFuture: Future<*>? = null
+  private val mediaItemRetrievalFutures = mutableMapOf<TestTrack, Future<*>>()
 
   override fun onCreate() {
     super.onCreate()
@@ -52,7 +52,7 @@ internal class PlaybackService
       testTrackMediaItemRetriever.mediaItemRequestCallback = this
       hardcodedTestTrackMediaItemRetriever.mediaItemRequestCallback = this
       TestTrack.values().forEach { track ->
-        mediaItemRetrievalFuture = testTrackMediaItemRetriever.retrieveMediaItem(track)
+        mediaItemRetrievalFutures[track] = testTrackMediaItemRetriever.retrieveMediaItem(track)
       }
       it.prepare()
     }
@@ -65,7 +65,7 @@ internal class PlaybackService
   override fun onDestroy() {
     cache.release()
     player?.removeListener(this)
-    mediaItemRetrievalFuture?.cancel(true)
+    mediaItemRetrievalFutures.forEach { it.value.cancel(true) }
     testTrackMediaItemRetriever.mediaItemRequestCallback = null
     hardcodedTestTrackMediaItemRetriever.mediaItemRequestCallback = null
     playerNotificationManager.setPlayer(null)
@@ -74,9 +74,13 @@ internal class PlaybackService
     super.onDestroy()
   }
 
-  override fun onMediaItemRetrieved(mediaItem: MediaItem) {
+  override fun onMediaItemRetrieved(testTrack: TestTrack, mediaItem: MediaItem) {
     mainLooperHandler.post {
       player?.addMediaSource(mediaSourceFactory.createMediaSource(mediaItem))
+      // Important that we post the removal of the Future to the UI thread since we also add to and
+      // iterate over the map from there, so modifying it from another thread may cause an exception
+      // to be thrown
+      mediaItemRetrievalFutures.remove(testTrack)
     }
   }
 
