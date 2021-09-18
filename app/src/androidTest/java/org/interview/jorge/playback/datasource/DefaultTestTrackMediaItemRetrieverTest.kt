@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Assume.assumeNoException
 import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.mockito.Mockito
@@ -20,7 +21,11 @@ internal class DefaultTestTrackMediaItemRetrieverTest {
     // This is a real end-to-end test, which relies on how things look server-side. Because of this,
     // check before actually running the test for a better shot at a relevant result, and skip the
     // test if the assumption is not met
-    assumeTrue(getResponseCodeForTestTrack0() == 200)
+    try {
+      assumeTrue(getResponseCodeForTestTrack0() == 200)
+    } catch (throwable: Throwable) {
+      assumeNoException(throwable)
+    }
     val callback = mock(TestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
     subject.mediaItemRequestCallback = callback
     val testTrack = TestTrack.TRACK_0
