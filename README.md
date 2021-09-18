@@ -1,0 +1,5 @@
+Here's my interview project. Binaries can be found in the [Releases tab](https://github.com/stoyicker/potential-garbanzo/releases). The solution for every part has a release attached to a tag which described how the problem has been tackled and introduced known issues if any. The release notes are however not exhaustive and there may be changes in the release that are not mentioned in them; for a detailed changelog please check the commits between the tags.
+
+The repository features a fully linear history and CI that runs lint as static analysis and both instrumented and non-instrumented tests. For the instrumented tests I'm using Firebase Test Lab on its free tier, which is pretty restrictive. To mitigate this, and as a good practice in general, I've also been using a pre-commit hook which you can find in the [_hooks](_hooks) folder. It also includes a few tests showcasing different testing techniques.
+
+The project uses ExoPlayer and, as a consequence, requires API 16. It is written in Kotlin because why not (I didn't see a strong reason to favor either choice over the other) and the release variant is disabled as it would have no purpose.
