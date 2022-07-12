@@ -10,13 +10,14 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ShuffleOrder
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import dagger.Lazy
 import org.interview.jorge.R
-import org.interview.jorge.playback.datasource.TestTrack
-import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
+import org.interview.jorge.playback.datasource.tidalinterview.HardcodedTestStreamMediaItemRetriever
+import org.interview.jorge.playback.datasource.tidalinterview.TestStream
 import java.util.Collections
 
 internal class PlaybackServiceCustomActionReceiver(
-  private val hardcodedTestTrackMediaItemRetriever: TestTrackMediaItemRetriever
+  private val hardcodedTestStreamMediaItemRetrieverLazy: Lazy<HardcodedTestStreamMediaItemRetriever>
 ) : PlayerNotificationManager.CustomActionReceiver {
   private var hasRequestedHardcodedMediaItems = false
 
@@ -69,10 +70,10 @@ internal class PlaybackServiceCustomActionReceiver(
         }
         CUSTOM_ACTION_ADD_HARDCODED_MEDIA_ITEMS -> {
           hasRequestedHardcodedMediaItems = true
-          TestTrack.values().forEach {
+          TestStream.values().forEach {
             // The future is ignored, but it has no side-effects, it's trivial and the callback
             // is cleared by the service, so it doesn't really matter
-            hardcodedTestTrackMediaItemRetriever.retrieveMediaItem(it)
+            hardcodedTestStreamMediaItemRetrieverLazy.get().retrieveMediaItem(it)
           }
         }
         else -> throw IllegalArgumentException("Unsupported custom action $action")

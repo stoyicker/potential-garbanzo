@@ -1,8 +1,9 @@
-package org.interview.jorge.playback.datasource
+package org.interview.jorge.playback.datasource.tidalinterview
 
 import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
+import org.interview.jorge.playback.datasource.MediaItemRetriever
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.net.HttpURLConnection
@@ -21,16 +22,16 @@ import java.util.concurrent.Future
  * this way we support the scenario where the [Runnable] is not started if [Future.cancel] is called
  * early enough.
  */
-internal class DefaultTestTrackMediaItemRetriever(executorService: ExecutorService) :
-  TestTrackMediaItemRetriever(executorService) {
-  override fun createRetrievalRunnable(testTrack: TestTrack) = object : Runnable {
+internal class ActualTestStreamMediaItemRetriever(executorService: ExecutorService) :
+  MediaItemRetriever<TestStream>(executorService) {
+  override fun createRetrievalRunnable(source: TestStream) = object : Runnable {
     override fun run() {
       try {
         if (Thread.interrupted()) {
           return
         }
         val urlConnection =
-          URL(testTrack.metadataDocumentUrl).openConnection() as HttpURLConnection
+          URL(source.metadataDocumentUrl).openConnection() as HttpURLConnection
         try {
           if (Thread.interrupted()) {
             return
@@ -46,12 +47,12 @@ internal class DefaultTestTrackMediaItemRetriever(executorService: ExecutorServi
                 .build()
             )
             .build()
-          mediaItemRequestCallback?.onMediaItemRetrieved(testTrack, mediaItem)
+          mediaItemRequestCallback?.onMediaItemRetrieved(source, mediaItem)
         } finally {
           urlConnection.disconnect()
         }
       } catch (throwable: Throwable) {
-        mediaItemRequestCallback?.onMediaItemRetrievalError(testTrack, throwable)
+        mediaItemRequestCallback?.onMediaItemRetrievalError(source, throwable)
       }
     }
   }

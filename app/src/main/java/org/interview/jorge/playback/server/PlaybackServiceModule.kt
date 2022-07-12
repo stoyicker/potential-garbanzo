@@ -29,13 +29,13 @@ import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.Binds
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
-import org.interview.jorge.playback.datasource.DefaultTestTrackMediaItemRetriever
-import org.interview.jorge.playback.datasource.HardcodedTestTrackMediaItemRetriever
-import org.interview.jorge.playback.datasource.TestTrackMediaItemRetriever
+import org.interview.jorge.playback.datasource.tidalinterview.ActualTestStreamMediaItemRetriever
+import org.interview.jorge.playback.datasource.tidalinterview.HardcodedTestStreamMediaItemRetriever
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -92,18 +92,16 @@ internal abstract class PlaybackServiceModule {
 
     @Provides
     @PlaybackServiceComponent.Scoped
-    @Hardcoded
-    fun hardcodedTestTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService)
-        : TestTrackMediaItemRetriever =
-      HardcodedTestTrackMediaItemRetriever(singleThreadExecutorService)
+    fun hardcodedTestStreamMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
+      HardcodedTestStreamMediaItemRetriever(singleThreadExecutorService)
 
     @Provides
     @PlaybackServiceComponent.Scoped
     @Local
     fun customActionReceiver(
-      @Hardcoded testTrackMediaItemRetriever: TestTrackMediaItemRetriever
+      hardcodedTestStreamMediaItemRetrieverLazy: Lazy<HardcodedTestStreamMediaItemRetriever>
     ): PlayerNotificationManager.CustomActionReceiver =
-      PlaybackServiceCustomActionReceiver(testTrackMediaItemRetriever)
+      PlaybackServiceCustomActionReceiver(hardcodedTestStreamMediaItemRetrieverLazy)
 
     @Provides
     @PlaybackServiceComponent.Scoped
@@ -134,10 +132,8 @@ internal abstract class PlaybackServiceModule {
 
     @Provides
     @PlaybackServiceComponent.Scoped
-    fun testTrackMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService)
-    : TestTrackMediaItemRetriever = DefaultTestTrackMediaItemRetriever(
-      singleThreadExecutorService
-    )
+    fun actualTestStreamMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
+      ActualTestStreamMediaItemRetriever(singleThreadExecutorService)
 
     @Provides
     @Reusable
@@ -201,10 +197,6 @@ internal abstract class PlaybackServiceModule {
   @Retention(AnnotationRetention.RUNTIME)
   @Qualifier
   private annotation class Upstream
-
-  @Retention(AnnotationRetention.RUNTIME)
-  @Qualifier
-  annotation class Hardcoded
 
   @Retention(AnnotationRetention.RUNTIME)
   @Qualifier

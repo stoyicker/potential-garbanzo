@@ -2,6 +2,8 @@ package org.interview.jorge.playback.datasource
 
 import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
+import org.interview.jorge.playback.datasource.tidalinterview.ActualTestStreamMediaItemRetriever
+import org.interview.jorge.playback.datasource.tidalinterview.TestStream
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assume.assumeNoException
@@ -13,8 +15,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
 
-internal class DefaultTestTrackMediaItemRetrieverTest {
-  private val subject = DefaultTestTrackMediaItemRetriever(Executors.newSingleThreadExecutor())
+internal class ActualTestStreamMediaItemRetrieverTest {
+  private val subject = ActualTestStreamMediaItemRetriever(Executors.newSingleThreadExecutor())
 
   @Test
   fun retrieveRealMediaItem() {
@@ -22,22 +24,24 @@ internal class DefaultTestTrackMediaItemRetrieverTest {
     // check before actually running the test for a better shot at a relevant result, and skip the
     // test if the assumption is not met
     try {
-      assumeTrue(getResponseCodeForTestTrack0() == 200)
+      assumeTrue(getResponseCodeForTestStream() == 200)
     } catch (throwable: Throwable) {
       assumeNoException(throwable)
     }
-    val callback = mock(TestTrackMediaItemRetriever.MediaItemRequestCallback::class.java)
-    subject.mediaItemRequestCallback = callback
-    val testTrack = TestTrack.TRACK_0
+    val callback = mock(MediaItemRetriever.MediaItemRequestCallback::class.java)
+    @Suppress("UNCHECKED_CAST")
+    subject.mediaItemRequestCallback =
+      callback as MediaItemRetriever.MediaItemRequestCallback<TestStream>
+    val testStream = TestStream.STREAM_0
 
-    subject.retrieveMediaItem(testTrack).get()
+    subject.retrieveMediaItem(testStream).get()
 
     // https://stackoverflow.com/questions/52389727/mockitos-argthat-returning-null-when-in-kotlin
     // Prettier resolution possible (e.g. with other libraries), but not the focus
     val arguments = Mockito.mockingDetails(callback).invocations.single {
       it.method.name.contentEquals("onMediaItemRetrieved")
     }.arguments
-    assertSame(testTrack, arguments[0])
+    assertSame(testStream, arguments[0])
     val mediaItem = arguments[1] as MediaItem
     assertEquals("5463901a", mediaItem.playbackProperties!!.tag)
     assertEquals("The greatest song", mediaItem.mediaMetadata.title)
@@ -47,7 +51,7 @@ internal class DefaultTestTrackMediaItemRetrieverTest {
     )
   }
 
-  private fun getResponseCodeForTestTrack0(): Int {
+  private fun getResponseCodeForTestStream(): Int {
     val urlConnection = URL(
       "https://quc-test-source.s3.amazonaws.com/client-test/5463901a/play"
     ).openConnection() as HttpURLConnection
