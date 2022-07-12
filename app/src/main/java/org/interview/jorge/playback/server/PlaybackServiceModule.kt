@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
+import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -55,8 +56,7 @@ internal abstract class PlaybackServiceModule {
     @Provides
     @Reusable
     @Local
-    fun renderersFactory(@Local context: Context): RenderersFactory =
-      MediaCodecAudioRenderersFactory(context)
+    fun renderersFactory(@Local context: Context): RenderersFactory = DefaultRenderersFactory(context)
 
     @Provides
     @Reusable
