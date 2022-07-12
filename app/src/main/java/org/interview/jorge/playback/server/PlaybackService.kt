@@ -19,6 +19,8 @@ import org.interview.jorge.playback.datasource.daterangetest.DateRangeTestStream
 import org.interview.jorge.playback.datasource.daterangetest.HardcodedDateTestStreamMediaItemRetriever
 import java.util.concurrent.Future
 import javax.inject.Inject
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 internal class PlaybackService
   : Service(), MediaItemRetriever.MediaItemRequestCallback<DateRangeTestStream>, Player.Listener {
@@ -110,3 +112,16 @@ internal class PlaybackService
 }
 
 internal const val PLAYBACK_SERVICE_FOREGROUND_NOTIFICATION_ID = 1
+
+private fun Any.toStringByReflection(): String {
+  val propsString = this::class.memberProperties
+    .joinToString(", ") {
+      val wasAccessible = it.isAccessible
+      it.isAccessible = true
+      val value = it.getter.call(this).toString()
+      it.isAccessible = wasAccessible
+      "${it.name}=${value}"
+    };
+
+  return "${this::class.simpleName} [${propsString}]"
+}
