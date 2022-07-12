@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -12,16 +13,15 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.Cache
-import org.interview.jorge.playback.datasource.tidalinterview.TestStream
 import org.interview.jorge.playback.datasource.MediaItemRetriever
 import org.interview.jorge.playback.datasource.Stream
-import org.interview.jorge.playback.datasource.tidalinterview.ActualTestStreamMediaItemRetriever
-import org.interview.jorge.playback.datasource.tidalinterview.HardcodedTestStreamMediaItemRetriever
+import org.interview.jorge.playback.datasource.applehlstest.AppleHlsTestStream
+import org.interview.jorge.playback.datasource.applehlstest.HardcodedAppleHlsTestStreamMediaItemRetriever
 import java.util.concurrent.Future
 import javax.inject.Inject
 
 internal class PlaybackService
-  : Service(), MediaItemRetriever.MediaItemRequestCallback<TestStream>, Player.Listener {
+  : Service(), MediaItemRetriever.MediaItemRequestCallback<AppleHlsTestStream>, Player.Listener {
   @Inject
   @JvmField
   var player: ExoPlayer? = null
@@ -30,10 +30,7 @@ internal class PlaybackService
   lateinit var playerNotificationManager: PlayerNotificationManager
 
   @Inject
-  lateinit var mediaItemRetriever: ActualTestStreamMediaItemRetriever
-
-  @Inject
-  lateinit var hardcodedTestStreamMediaItemRetriever: HardcodedTestStreamMediaItemRetriever
+  lateinit var hardcodedAppleHlsTestStreamMediaItemRetriever: HardcodedAppleHlsTestStreamMediaItemRetriever
 
   @Inject
   lateinit var mainLooperHandler: Handler
@@ -51,10 +48,10 @@ internal class PlaybackService
     player?.let {
       it.addListener(this)
       playerNotificationManager.setPlayer(it)
-      mediaItemRetriever.mediaItemRequestCallback = this
-      hardcodedTestStreamMediaItemRetriever.mediaItemRequestCallback = this
-      TestStream.values().forEach { track ->
-        mediaItemRetrievalFutures[track] = mediaItemRetriever.retrieveMediaItem(track)
+      hardcodedAppleHlsTestStreamMediaItemRetriever.mediaItemRequestCallback = this
+      AppleHlsTestStream.values().forEach { track ->
+        mediaItemRetrievalFutures[track] =
+          hardcodedAppleHlsTestStreamMediaItemRetriever.retrieveMediaItem(track)
       }
       it.prepare()
     }
@@ -68,15 +65,14 @@ internal class PlaybackService
     cache.release()
     player?.removeListener(this)
     mediaItemRetrievalFutures.forEach { it.value.cancel(true) }
-    mediaItemRetriever.mediaItemRequestCallback = null
-    hardcodedTestStreamMediaItemRetriever.mediaItemRequestCallback = null
+    hardcodedAppleHlsTestStreamMediaItemRetriever.mediaItemRequestCallback = null
     playerNotificationManager.setPlayer(null)
     player?.release()
     player = null
     super.onDestroy()
   }
 
-  override fun onMediaItemRetrieved(source: TestStream, mediaItem: MediaItem) {
+  override fun onMediaItemRetrieved(source: AppleHlsTestStream, mediaItem: MediaItem) {
     mainLooperHandler.post {
       player?.addMediaSource(mediaSourceFactory.createMediaSource(mediaItem))
       // Important that we post the removal of the Future to the UI thread since we also add to and
@@ -86,8 +82,12 @@ internal class PlaybackService
     }
   }
 
-  override fun onMediaItemRetrievalError(source: TestStream, cause: Throwable) {
-    Log.e(javaClass.name, "MediaItem retrieval error for track ${source.name}", cause)
+  override fun onMediaItemRetrievalError(source: AppleHlsTestStream, cause: Throwable) {
+    Toast.makeText(
+      this,
+      "MediaItem retrieval error for track ${source.name} - ${cause.javaClass}",
+      Toast.LENGTH_SHORT
+    ).show()
   }
 
   override fun onIsPlayingChanged(isPlaying: Boolean) {
