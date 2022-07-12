@@ -1,0 +1,12 @@
+package org.interview.jorge.playback.datasource.daterangetest
+
+import org.interview.jorge.playback.datasource.Stream
+
+/**
+ * @see <a href=https://developer.apple.com/streaming/examples/>Apple HLS examples</a>
+ */
+internal enum class DateRangeTestStream : Stream {
+  THREE_ROTATING_MUSIC_VIDEOS;
+
+  val playlistUrl = "https://video-weaver.fra06.hls.ttvnw.net/v1/playlist/CqQEveoQm5VY5ip0eE_Osk-S1RUW8SSsirR68ZoXlMI6ajJBxklsMhDQg23l6aY8a9xj3cz1ACQcDA9JU8cEWs8Tfz5OaUu6jThaI24_QQmueP2BENv2XcD1iux7fTF0dH-q3pGES8SNHgZJaO6b9b3J_UJoP9jwCaFh4czuTbzb7y1hWAF11iXtXW8IXaTikD26q2RGJloYUijxNEZmSuo6YNUeXxkTyQDK7LGAw7ou8loihXwG_n09uLGV9cqrH10M7b_1fqcanKiL0j0PD_bzPtLyUyDC_IsyeQ--zm8b8Fua9PU5zOEkkIxOqn_i_8cnMin_4yMMmDSbTCB-_QGQo9l9FkTQEqml_YAaBvKbMiYmcyYqOIe8OB9Z20-Rd8Gzkrl69BdZjjWABeUFjOrFAvWKAwnG0r42NjZ_JiOoqQoahcWMyqbM2mPnJPgmBQvNi4W1ppO2_LMVfz0WfX4sxxZ_ZGvWXlBUNxmkjXg7-yfD0IsOfRiOG6TV1jepwTYysA_KPq9yrPBB3Lt3682Eq5DNvCpGLDTC-vIFtOY4Zs5ipYFEgywx2njizXT-RT_xGjA0unp7X2RCKK5djGTNxFSOPBsnlMSbOSBoM1gBiyG5-L54OpnRvX0bChUn3n5V_sN6V_ZwX_Ch35Yt0SlcVta_GdNalG_BesunOX_-iZACLoomb_GBWw9gWGiwOFmNgGD-feG75THsC8YwM75EGFlESeoaDDBpVh_C-0uRnfNBNSABKglldS13ZXN0LTIwlgQ.m3u8"
+}

@@ -29,13 +29,11 @@ import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.NotificationUtil
 import dagger.Binds
-import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import org.interview.jorge.R
-import org.interview.jorge.playback.datasource.tidalinterview.ActualTestStreamMediaItemRetriever
-import org.interview.jorge.playback.datasource.tidalinterview.HardcodedTestStreamMediaItemRetriever
+import org.interview.jorge.playback.datasource.daterangetest.HardcodedDateTestStreamMediaItemRetriever
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -92,23 +90,15 @@ internal abstract class PlaybackServiceModule {
 
     @Provides
     @PlaybackServiceComponent.Scoped
-    fun hardcodedTestStreamMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
-      HardcodedTestStreamMediaItemRetriever(singleThreadExecutorService)
-
-    @Provides
-    @PlaybackServiceComponent.Scoped
-    @Local
-    fun customActionReceiver(
-      hardcodedTestStreamMediaItemRetrieverLazy: Lazy<HardcodedTestStreamMediaItemRetriever>
-    ): PlayerNotificationManager.CustomActionReceiver =
-      PlaybackServiceCustomActionReceiver(hardcodedTestStreamMediaItemRetrieverLazy)
+    fun hardcodedAppleHlsTestStreamMediaItemRetriever(
+      @Local singleThreadExecutorService: ExecutorService
+    ) = HardcodedDateTestStreamMediaItemRetriever(singleThreadExecutorService)
 
     @Provides
     @PlaybackServiceComponent.Scoped
     fun playerNotificationManager(
       @Local context: Context,
       @Local notificationListener: PlayerNotificationManager.NotificationListener,
-      @Local customActionReceiver: PlayerNotificationManager.CustomActionReceiver
     ) = PlayerNotificationManager.Builder(
       context,
       PLAYBACK_SERVICE_FOREGROUND_NOTIFICATION_ID,
@@ -116,7 +106,6 @@ internal abstract class PlaybackServiceModule {
     ).setNotificationListener(notificationListener)
       .setChannelNameResourceId(R.string.playback_service_notification_channel_name)
       .setChannelImportance(NotificationUtil.IMPORTANCE_HIGH)
-      .setCustomActionReceiver(customActionReceiver)
       .build().apply {
         setUsePreviousAction(true)
         setUseNextAction(true)
@@ -129,11 +118,6 @@ internal abstract class PlaybackServiceModule {
     @Reusable
     @Local
     fun singleThreadExecutorService(): ExecutorService = Executors.newSingleThreadExecutor()
-
-    @Provides
-    @PlaybackServiceComponent.Scoped
-    fun actualTestStreamMediaItemRetriever(@Local singleThreadExecutorService: ExecutorService) =
-      ActualTestStreamMediaItemRetriever(singleThreadExecutorService)
 
     @Provides
     @Reusable
