@@ -10,6 +10,7 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.metadata.Metadata
 import com.google.android.exoplayer2.source.MediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.Cache
@@ -107,6 +108,12 @@ internal class PlaybackService
       } else {
         stopSelf()
       }
+    }
+  }
+
+  override fun onMetadata(metadata: Metadata) {
+    for (i in 0 until metadata.length()) {
+      Log.d(javaClass.name, "onMetadata (i=$i): ${metadata.get(i).toStringByReflection()}")
     }
   }
 }
