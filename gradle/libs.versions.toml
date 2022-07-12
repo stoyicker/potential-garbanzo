@@ -15,6 +15,7 @@ gradlePluginAndroid = { module = "com.android.tools.build:gradle", version.ref =
 gradlePluginKotlinAndroid = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit"}
 kotlinStdLib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 androidxInstrumentedTestRunner = { module = "androidx.test:runner", version.ref = "androidxTest" }
 androidxInstrumentedTestRules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExt" }
@@ -32,7 +33,7 @@ mockitoAndroid = { module = "org.mockito:mockito-android", version.ref = "mockit
 gradlePluginsAndroid = ["gradlePluginAndroid"]
 gradlePluginsKotlin = ["gradlePluginKotlinAndroid"]
 junit = ["junit"]
-kotlin = ["kotlinStdLib"]
+kotlin = ["kotlinStdLib", "kotlinReflect"]
 androidxTest = ["androidxInstrumentedTestRunner", "androidxInstrumentedTestRules", "androidxTestExtJunit"]
 androidxTestOrchestrator = ["androidxTestOrchestrator"]
 dagger = ["dagger"]
